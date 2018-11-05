@@ -3,81 +3,127 @@
 <head>
 	<title>Beginner's Guide to React</title>
 	<meta charset="UTF-8" />
+<script src="https://unpkg.com/react@16.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+<script src="https://unpkg.com/prop-types@15.6.1/prop-types.js"></script>
 </head>
   <body>
     <div id="root"></div>
-    <script src="https://unpkg.com/react@16.3.1/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@16.3.1/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
-    <script src="https://unpkg.com/prop-types@15.6.1/prop-types.js"></script>
-
     <script type="text/babel">
-      class StopWatch extends React.Component {
-      
-        state = {lapse: 0, running: false}
 
-        handleRunClick = () => {
-          this.setState(state => {
-            if (state.running) {
-              clearInterval(this.timer)
-            } else {
-              const startTime = Date.now() - this.state.lapse
-              this.timer = setInterval(() => {
-                this.setState({
-                  lapse: Date.now() - startTime,
-                })
-              })
-            }
-            return {running: !state.running}
-          })
-        }
+ class Calculator extends React.Component{
+	  state= {result: '', first: 0, second: 0, operation: "", op: false } 
 
-        handleClearClick = () => {
-          clearInterval(this.timer)
-          this.setState({lapse: 0, running: false})
-        }
-        
-        render() {
-          const {lapse, running} = this.state
-          const buttonStyles = {
-              border: '1px solid #ccc',
-              background: '#fff',
-              fontSize: '2em',
-              padding: 15,
-              margin: 5,
-              width: 200,
-          }
+		handelOpClick = (e) => {
+			 const operation = e.target.getAttribute('value')
+			 console.log(operation)
+			 this.setState({operation: operation,
+			  first :parseInt(this.state.result),
+				result: "", op: true})
+				// console.log(this.state.first)
+			}
 
-          return (
-            <div style={{textAlign: 'center'}}>
-              <label
-                style={{
-                  fontSize: '5em',
-                  display: 'block',
-                }}
-              >
-                  {lapse}ms
-              </label>
+ handelClearClick = () => 
+ { this.setState({result:'', first: 0, second:0, op:false, operation:'' }) }
 
-              <button onClick={this.handleRunClick} style={buttonStyles}>
-                {running ? 'Stop' : 'Start'}
-              </button>
-              
-              <button onClick={this.handleClearClick} style={buttonStyles}>
-                Clear
-              </button>
-            </div>
-          )
-        }
-      }
+ handelEqualClick= () =>
+ { 
+	const {result, first, second, op, operation} = this.state;
+	 this.setState({second: result})
+ if (op) {
+	  switch (operation) {
+			 case '+': 
+			 this.setState({result: parseInt(result) + first,
+			 	op: false,
+			  first: 0,
+				 operation:''
+				 })
+			 // console.log(this.state.operation)
 
-      const element = <StopWatch />
+			  break 
+				case '-':
+				 this.setState({result: this.state.first - parseInt(this.state.result) })
+break 
+default:
+ break 
+ } 
+ }
 
-      ReactDOM.render(
-        element,
-        document.getElementById('root')
-      )
+ }	
+ handelNumClick = (value) => {
+	  value = this.state.result + value
+ this.setState({result: value})
+ //console.log(value)
+ console.log(this.state.operation)
+ }
+ render(){ 
+	 const {result,first} = this.state
+	  const buttonStyles = { border:
+'5px solid #ccc',
+ background: '#fff',
+  fontSize: '2em',
+	 padding: 15,
+	  margin: 5,
+		 width: 70, }
+const inputStyles = {
+	 border:'2px solid #ccc',
+	  background: '#fff',
+		 fontSize: '2em',
+		  padding: 15, margin: 5, width: 150, }
+return (
+	
+<div style={{textAlign: 'center'}}>
+	<div>
+		<input style={{ fontSize: '5em', display: 'block',width: 300, margin: 'auto', background: 'gray' }}
+		 value={ this.state.result }></input>
+	</div>
+	<div>
+		<button onClick={()=>this.handelNumClick(7)} style={buttonStyles}>
+          7 </button>
+		<button onClick={()=>this.handelNumClick(8)} style={buttonStyles}>
+          8</button>
+		<button onClick={()=>this.handelNumClick(9)} style={buttonStyles}>
+           9 </button>
+		<button onClick={this.handelOpClick} value="+" style={buttonStyles}>
+        +</button>
+	</div>
+		<div>
+			<button onClick={()=>this.handelNumClick(4)} style={buttonStyles}>
+		          4 </button>
+			<button onClick={()=>this.handelNumClick(5)} style={buttonStyles}>
+		          5</button>
+			<button onClick={()=>this.handelNumClick(6)} style={buttonStyles}>
+		           6 </button>
+			<button onClick={this.handelOpClick} value="-" style={buttonStyles}>
+		        -</button>
+		</div>
+			<div>
+				<button onClick={()=>this.handelNumClick(3)} style={buttonStyles}>
+			         3 </button>
+				<button onClick={()=>this.handelNumClick(2)} style={buttonStyles}>
+			         2</button>
+				<button onClick={()=>this.handelNumClick(1)} style={buttonStyles}>
+			            1 </button>
+				<button onClick={this.handelOpClick} style={buttonStyles}>
+			        *</button>
+			</div>
+	<div>
+		<button onClick={this.handelEqualClick} style={buttonStyles}>
+				          = </button>
+		<button onClick={()=>this.handelNumClick(0)} style={buttonStyles}>
+				          0</button>
+		<button onClick={this.handelClearClick} style={buttonStyles}>
+				            C </button>
+		<button onClick={this.handelOpClick} style={buttonStyles}>
+				        /</button>
+	</div>
+</div>
 
-    </script>
+) } } ReactDOM.render(
+
+<Calculator />, document.getElementById('root'))
+
+</script>
   </body>
 </html>
